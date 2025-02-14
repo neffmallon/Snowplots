@@ -241,11 +241,13 @@ def make_snowdepth_figure(station: Station, gb: pd.DataFrame, pctl: pd.DataFrame
     return f
 
 def make_day_of_the_week_snow_figure(station: Station, gb: pd.DataFrame) -> plt.Figure:
-
+    f, ax = plt.subplots()
     gb["Day_name"] = pd.to_datetime(gb.index.values).day_name()
-    day_of_week_gb = gb[gb.Season == 2022].groupby(by=["Season", "Day_name"]).sum(numeric_only=True)
-    ax = day_of_week_gb.plot.bar("Day_name", "SNOW")
-    return ax
+    day_of_week_gb = gb[gb.Season == 2024].groupby(by=["Season", "Day_name"], as_index=False).sum(numeric_only=True)
+    day_of_week_gb[["Day_name", "SNOW"]].plot.bar("Day_name", ax=ax)
+    plt.xticks(rotation=25)
+    plt.tight_layout()
+    return f
 
 @click.command()
 @click.option(
